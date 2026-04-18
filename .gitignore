@@ -1,0 +1,4 @@
+*.obj
+*.lint
+*.asm
+output/*.cna

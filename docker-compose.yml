@@ -1,0 +1,12 @@
+services:
+  bof-builder:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        XWIN_VERSION: "0.7.0"
+    volumes:
+      - ./output:/output
+      - ./src:/src 
+      - ./includes:/includes 
+    container_name: bof-builder

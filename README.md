@@ -1,23 +1,55 @@
-# CS-BOF-TEMPLATE
+# ProcessInspect BOF
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/whokilleddb)
 
-A dockerized tempalte for building Cobalt Strike BOF using the `clang-cl` compiler! 
+A CS BOF which can be used to inspect process memory, addresses and symbols! 
 
-## Useful MACROS
+## BOF commands
 
-Here are a bunch of headers which people might find useful:
+## ba 
 
-| Macro | Header File | Description | 
-| ------|--------------|-------------|
-| PRINT | `dbgprint.h` | An alias to `BeaconPrintf(CALLBACK_OUTPUT)` | 
-| EPRINT | `dbgprint.h` | An alias to `BeaconPrintf(CALLBACK_ERROR)` | 
-| DBG | `dbgprint.h` | Prints the current line number of the given file - useful for debugging |
-| ERR_PRINT | `dbgprint.h` | Calls `GetLastError()` and prints the return code |
+The `ba` command returns the base address of a DLL in the current process. 
 
-I would recommend going through `dbgprint.h` and `usermacros.h` for a better understanding of the macros and see other useful macors. 
+**Syntax**:
 
-_PS: The macros are there because in the future, I want to extend the BOFs to support other C2s and macros come in handy there._
+```
+psi ba dllname
+```
+
+Parameters:
+
+- `dll_name`: The name of the DLL to find the base address of
+
+Example:
+
+```
+psi ba ntdll.dll
+psi ba kernel32.dll
+```
+
+## addr 
+
+The `addr` command returns the value at a given address
+
+**Syntax**:
+
+```
+psi addr <address> <type> [count]
+```
+
+- `address`: The address to inspect in hex
+- `type`: This controls how to treat the type of data at the given address. Valid values are: WORD, DWORD, int, LPVOID, ULONG, ULONG64, HANDLE. Therefore, if a user provides a value `DWORD`, then a chunck of `size(DWORD)` is read at that address
+- `count`: How many chuncks to read. This argument is optional and by default set to one 
+
+The output should be a hexdump starting at the given address and chuncks grouped together
+
+Example:
+
+```
+psi addr 0xdeadbeef DWORD 2 
+psi addr 0xdeadbeef LPVOID
+psi addr 0xdeadbeef HANDLE 5
+```
 
 ## Building BOFs
 
@@ -27,12 +59,4 @@ To compile a BOF, update the `src/hello.cc` file or the `Makefile` to reflect th
 $ docker-compose up --build
 ```
 
-This would install `clang-cl` and fetch the necessary headers using [xwin](https://github.com/Jake-Shadle/xwin) and compile the BOF and place it in the `output` directory along with any associated scripts. The compilation process will also use the [boflint.py](https://github.com/Cobalt-Strike/bof-vs/blob/main/BOF-Template/utils/boflint.py) script to create a `.lint` file which people are encouraged to go through before firing the BOF off. An empty file represents that your BOF is good to go. 
-
-## Examples 
-
-![](./imgs/ss.png)
-
------
-
-Thanks to [Steve](https://x.com/0xTriboulet) on Twitter for the inspiration! 
+_Thanks to [Steve](https://x.com/0xTriboulet) on Twitter for the inspiration!_

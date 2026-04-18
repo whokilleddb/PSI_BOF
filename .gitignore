@@ -2,3 +2,5 @@
 *.lint
 *.asm
 output/*.cna
+.claude/*
+CLAUDE.md

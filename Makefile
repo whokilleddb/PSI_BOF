@@ -3,7 +3,7 @@ CXXFLAGS=/winsdkdir /opt/winsdk/sdk /vctoolsdir /opt/winsdk/crt /c /I"/includes"
 
 SRC=/src
 OUTPUT=/output
-TARGET=hello
+TARGET=psi
 
 all: $(TARGET)
 

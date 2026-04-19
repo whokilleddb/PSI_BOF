@@ -3,7 +3,7 @@ alias psi {
 
    $argc = size(@_);
    if ($argc < 2) {
-      berror($1, "Usage: psi lm \[dll\] | psi addr <address> <type> \[count\] | psi meminfo <address>");
+      berror($1, "Usage: psi lm \[dll\] | psi addr <address> <type> \[count\] | psi lt | psi meminfo <address> | psi regdump <tid> \[register\]");
       return;
    }
 
@@ -40,8 +40,36 @@ alias psi {
       $args = bof_pack($1, "zz", $subcmd, $3);
       btask($1, "Running PSI BOF: meminfo at $3");
    }
+   else if ($subcmd eq "lt") {
+      if ($argc != 2) {
+         berror($1, "Usage: psi lt");
+         return;
+      }
+      $args = bof_pack($1, "z", $subcmd);
+      btask($1, "Running PSI BOF: list threads in current process");
+   }
+   else if ($subcmd eq "regdump") {
+      if ($argc < 3 || $argc > 4) {
+         berror($1, "Usage: psi regdump <tid> \[register\]");
+         return;
+      }
+      if ($3 ne "0" && int($3) == 0) {
+         berror($1, "psi regdump: <tid> must be an integer (got ' $+ $3 $+ ')");
+         return;
+      }
+      if (int($3) < 0) {
+         berror($1, "psi regdump: <tid> must be non-negative (got ' $+ $3 $+ ')");
+         return;
+      }
+      $args = bof_pack($1, "ziz", $subcmd, int($3), iff($argc == 4, $4, ""));
+      if ($argc == 4) {
+         btask($1, "Running PSI BOF: regdump tid= $+ $3 $+ , register= $+ $4");
+      } else {
+         btask($1, "Running PSI BOF: regdump tid= $+ $3");
+      }
+   }
    else {
-      berror($1, "Unknown psi subcommand: $subcmd . Use lm, addr, or meminfo.");
+      berror($1, "Unknown psi subcommand: $subcmd . Use lm, addr, lt, meminfo, or regdump.");
       return;
    }
 
@@ -57,5 +85,5 @@ alias psi {
 beacon_command_register(
     "psi",
     "Inspect process memory, module base addresses, and symbols",
-    "Usage:\n  psi lm                               List all loaded modules in the current process\n  psi lm <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { BYTE, WORD, DWORD, LPVOID }\n  psi meminfo <address>                VirtualQuery + module/section/symbol info for <address>"
+    "Usage:\n  psi lm                               List all loaded modules in the current process\n  psi lm <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { BYTE, WORD, DWORD, LPVOID }\n  psi lt                               List all threads in the current process with TID + start address\n  psi meminfo <address>                VirtualQuery + module/section/symbol info for <address>\n  psi regdump <tid> \[register\]         Dump CPU registers of a thread (tid=0 means the calling Beacon thread); optional register filter (rax/eax/ah, xmm0, ymm0, zmm0, etc.)"
 );

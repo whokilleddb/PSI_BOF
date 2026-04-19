@@ -32,6 +32,8 @@ void   psi_print_protect(formatp *fb, DWORD prot);
 // subcommand handlers
 void handle_addr(datap *parser);
 void handle_lm(datap *parser);
+void handle_lt(datap *parser);
 void handle_meminfo(datap *parser);
+void handle_regdump(datap *parser);
 
 #endif

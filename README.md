@@ -52,6 +52,29 @@ psi addr 0xdeadbeef LPVOID
 psi addr 0xdeadbeef WORD 8
 ```
 
+## meminfo
+
+The `meminfo` command returns various information about a given memory address including:
+- Name of the module backing the address if any
+- Memory permissions of the memory region R/W/X
+- Any associated symbols at that address fetched from microsoft symbol server
+- Other information similar to windbg !address command 
+
+**Syntax**:
+
+```
+psi meminfo <address> 
+```
+
+- `address`: The address to inspect in hex
+
+Example:
+
+```
+psi addr 0xdeadbeef
+```
+
+
 ## Building BOFs
 
 To compile a BOF, update the `src/hello.cc` file or the `Makefile` to reflect the necessary changes and then type:

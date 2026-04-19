@@ -3,7 +3,7 @@ alias psi {
 
    $argc = size(@_);
    if ($argc < 2) {
-      berror($1, "Usage: psi lm \[dll\] | psi addr <address> <type> \[count\]");
+      berror($1, "Usage: psi lm \[dll\] | psi addr <address> <type> \[count\] | psi meminfo <address>");
       return;
    }
 
@@ -32,8 +32,16 @@ alias psi {
       $args  = bof_pack($1, "zzzi", $subcmd, $3, $4, $count);
       btask($1, "Running PSI BOF: read $4 at $3, count=$count");
    }
+   else if ($subcmd eq "meminfo") {
+      if ($argc != 3) {
+         berror($1, "Usage: psi meminfo <address>");
+         return;
+      }
+      $args = bof_pack($1, "zz", $subcmd, $3);
+      btask($1, "Running PSI BOF: meminfo at $3");
+   }
    else {
-      berror($1, "Unknown psi subcommand: $subcmd . Use lm or addr.");
+      berror($1, "Unknown psi subcommand: $subcmd . Use lm, addr, or meminfo.");
       return;
    }
 
@@ -49,5 +57,5 @@ alias psi {
 beacon_command_register(
     "psi",
     "Inspect process memory, module base addresses, and symbols",
-    "Usage:\n  psi lm                               List all loaded modules in the current process\n  psi lm <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { BYTE, WORD, DWORD, LPVOID }"
+    "Usage:\n  psi lm                               List all loaded modules in the current process\n  psi lm <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { BYTE, WORD, DWORD, LPVOID }\n  psi meminfo <address>                VirtualQuery + module/section/symbol info for <address>"
 );

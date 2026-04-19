@@ -25,9 +25,13 @@ int    psi_basename_matches(const UNICODE_STRING *u, const char *name);
 void   psi_us_to_ansi(const UNICODE_STRING *u, char *out, size_t cap);
 int    psi_parse_hex_u64(const char *s, unsigned long long *out);
 size_t psi_type_size(const char *type);
+const char *psi_mem_state_str(DWORD state);
+const char *psi_mem_type_str(DWORD type);
+void   psi_print_protect(formatp *fb, DWORD prot);
 
 // subcommand handlers
 void handle_addr(datap *parser);
 void handle_lm(datap *parser);
+void handle_meminfo(datap *parser);
 
 #endif

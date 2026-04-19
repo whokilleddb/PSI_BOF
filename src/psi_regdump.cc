@@ -606,7 +606,7 @@ void handle_regdump(datap *parser) {
     if (reg_name && *reg_name == 0) reg_name = NULL;
 
     DWORD self_tid      = GetCurrentThreadId();
-    DWORD effective_tid = (tid_i == 0) ? self_tid : (DWORD)tid_i;
+    DWORD effective_tid = (tid_i < 0) ? self_tid : (DWORD)tid_i;
     BOOL  is_self       = (effective_tid == self_tid);
 
     BOOL avx_available    = FALSE;

@@ -23,4 +23,7 @@ DFR(Kernel32, LocalAlloc)
 DFR(Kernel32, LocalFree)
 #define LocalFree Kernel32$LocalFree
 
+DFR(Kernel32, VirtualQuery)
+#define VirtualQuery Kernel32$VirtualQuery
+
 #endif

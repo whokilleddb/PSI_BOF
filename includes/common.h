@@ -16,6 +16,7 @@
 #include "dbgprint.h"
 #include "usermacros.h"
 #include "kernel32.imp.h"
+#include "dbghelp.imp.h"
 
 #ifndef __COMMON_BOF__
 #define __COMMON_BOF__

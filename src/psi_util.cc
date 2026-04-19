@@ -87,3 +87,44 @@ size_t psi_type_size(const char *t) {
     if (psi_aieq(t, "LPVOID"))  return 8;
     return 0;
 }
+
+const char *psi_mem_state_str(DWORD state) {
+    switch (state) {
+        case MEM_COMMIT:  return "MEM_COMMIT";
+        case MEM_RESERVE: return "MEM_RESERVE";
+        case MEM_FREE:    return "MEM_FREE";
+        default:          return "UNKNOWN";
+    }
+}
+
+const char *psi_mem_type_str(DWORD type) {
+    switch (type) {
+        case MEM_IMAGE:   return "MEM_IMAGE";
+        case MEM_MAPPED:  return "MEM_MAPPED";
+        case MEM_PRIVATE: return "MEM_PRIVATE";
+        case 0:           return "-";
+        default:          return "UNKNOWN";
+    }
+}
+
+void psi_print_protect(formatp *fb, DWORD prot) {
+    DWORD base = prot & ~(PAGE_GUARD | PAGE_NOCACHE | PAGE_WRITECOMBINE);
+    const char *name = "UNKNOWN";
+    const char *rwx  = "???";
+    switch (base) {
+        case 0:                      name = "(none)";                 rwx = "---"; break;
+        case PAGE_NOACCESS:          name = "PAGE_NOACCESS";          rwx = "---"; break;
+        case PAGE_READONLY:          name = "PAGE_READONLY";          rwx = "R--"; break;
+        case PAGE_READWRITE:         name = "PAGE_READWRITE";         rwx = "RW-"; break;
+        case PAGE_WRITECOPY:         name = "PAGE_WRITECOPY";         rwx = "RW-"; break;
+        case PAGE_EXECUTE:           name = "PAGE_EXECUTE";           rwx = "--X"; break;
+        case PAGE_EXECUTE_READ:      name = "PAGE_EXECUTE_READ";      rwx = "R-X"; break;
+        case PAGE_EXECUTE_READWRITE: name = "PAGE_EXECUTE_READWRITE"; rwx = "RWX"; break;
+        case PAGE_EXECUTE_WRITECOPY: name = "PAGE_EXECUTE_WRITECOPY"; rwx = "RWX"; break;
+    }
+    FPRINT(fb, "%s", name);
+    if (prot & PAGE_GUARD)        FPRINT(fb, "|PAGE_GUARD");
+    if (prot & PAGE_NOCACHE)      FPRINT(fb, "|PAGE_NOCACHE");
+    if (prot & PAGE_WRITECOMBINE) FPRINT(fb, "|PAGE_WRITECOMBINE");
+    FPRINT(fb, " (%s)", rwx);
+}

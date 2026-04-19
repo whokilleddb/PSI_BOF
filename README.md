@@ -52,7 +52,62 @@ psi addr 0xdeadbeef LPVOID
 psi addr 0xdeadbeef WORD 8
 ```
 
-## Building BOFs
+## meminfo
+
+The `meminfo` command returns various information about a given memory address including:
+- Name of the module backing the address if any
+- Memory permissions of the memory region R/W/X
+- Any associated symbols at that address fetched from microsoft symbol server
+- Other information similar to windbg !address command 
+
+**Syntax**:
+
+```
+psi meminfo <address> 
+```
+
+- `address`: The address to inspect in hex
+
+Example:
+
+```
+psi addr 0xdeadbeef
+```
+
+## lt 
+
+The `lt` command prints all the threads of the current process along with their TID and entrypoint
+
+**Syntax**
+
+```
+psi lt
+```
+
+## regdump
+
+The `regdump` command dumps CPU registers for a thread. A thread id (`tid`) is required: `0` selects the calling Beacon thread; any non-zero value selects another thread in the current process (which is suspended only for the duration of the snapshot). If a register name is supplied, only that register is printed; otherwise every supported register is dumped, including the full x64 GPR set plus RFLAGS, segment registers, debug registers, SSE (XMM), AVX/AVX2 (YMM), and AVX-512 (ZMM / kmask) — the last three gated on the host's CPU feature support. Register names are matched case-insensitively and accept sub-width aliases (e.g. `eax`, `ax`, `ah`, `al` all resolve against the same underlying GPR).
+
+**Syntax**:
+
+```
+psi regdump <tid> [register]
+```
+
+- `tid`: Thread id whose context to dump. `0` means the current (calling) thread.
+- `register`: optional register name to filter the output to a single register.
+
+Example:
+
+```
+psi regdump 0
+psi regdump 0 rax
+psi regdump 12345 rip
+psi regdump 12345 ymm0
+```
+
+
+# Building BOFs
 
 To compile a BOF, update the `src/hello.cc` file or the `Makefile` to reflect the necessary changes and then type:
 

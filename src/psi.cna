@@ -2,20 +2,26 @@ alias psi {
    local('$handle $data $args $subcmd $argc $count');
 
    $argc = size(@_);
-   if ($argc < 3) {
-      berror($1, "Usage: psi ba <dll> | psi addr <address> <type> \[count\]");
+   if ($argc < 2) {
+      berror($1, "Usage: psi lm \[dll\] | psi addr <address> <type> \[count\]");
       return;
    }
 
    $subcmd = $2;
 
-   if ($subcmd eq "ba") {
-      if ($argc != 3) {
-         berror($1, "Usage: psi ba <dll>");
+   if ($subcmd eq "lm") {
+      if ($argc == 2) {
+         $args = bof_pack($1, "zz", $subcmd, "");
+         btask($1, "Running PSI BOF: list loaded modules");
+      }
+      else if ($argc == 3) {
+         $args = bof_pack($1, "zz", $subcmd, $3);
+         btask($1, "Running PSI BOF: base address of $3");
+      }
+      else {
+         berror($1, "Usage: psi lm \[dll\]");
          return;
       }
-      $args = bof_pack($1, "zz", $subcmd, $3);
-      btask($1, "Running PSI BOF: base address of $3");
    }
    else if ($subcmd eq "addr") {
       if ($argc < 4 || $argc > 5) {
@@ -27,7 +33,7 @@ alias psi {
       btask($1, "Running PSI BOF: read $4 at $3, count=$count");
    }
    else {
-      berror($1, "Unknown psi subcommand: $subcmd . Use ba or addr.");
+      berror($1, "Unknown psi subcommand: $subcmd . Use lm or addr.");
       return;
    }
 
@@ -43,5 +49,5 @@ alias psi {
 beacon_command_register(
     "psi",
     "Inspect process memory, module base addresses, and symbols",
-    "Usage:\n  psi ba <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { WORD, DWORD, int, LPVOID, ULONG, ULONG64, HANDLE }"
+    "Usage:\n  psi lm                               List all loaded modules in the current process\n  psi lm <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { WORD, DWORD, int, LPVOID, ULONG, ULONG64, HANDLE }"
 );

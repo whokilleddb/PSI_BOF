@@ -5,8 +5,8 @@
 // all as one translation unit, so the Makefile only has to drive psi.cc.
 #include "crt_stubs.cc"
 #include "psi_util.cc"
-#include "psi_ba.cc"
 #include "psi_addr.cc"
+#include "psi_lm.cc"
 
 static void handle_cmdline(const char *subcmd, datap *parser) {
     if (!subcmd) {
@@ -14,8 +14,8 @@ static void handle_cmdline(const char *subcmd, datap *parser) {
         return;
     }
 
-    if      (psi_streq(subcmd, "ba"))   handle_ba(parser);
-    else if (psi_streq(subcmd, "addr")) handle_addr(parser);
+    if      (psi_streq(subcmd, "addr")) handle_addr(parser);
+    else if (psi_streq(subcmd, "lm"))   handle_lm(parser);
     else    EPRINT("[-] psi: unknown subcommand '%s'\n", subcmd);
 }
 

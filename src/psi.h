@@ -25,7 +25,7 @@ int  psi_basename_matches(const UNICODE_STRING *u, const char *name);
 void psi_us_to_ansi(const UNICODE_STRING *u, char *out, size_t cap);
 
 // subcommand handlers
-void handle_ba(datap *parser);
 void handle_addr(datap *parser);
+void handle_lm(datap *parser);
 
 #endif

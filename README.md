@@ -129,4 +129,4 @@ To compile a BOF, update the `src/hello.cc` file or the `Makefile` to reflect th
 $ docker-compose up --build
 ```
 
-_Thanks to [Steve](https://x.com/0xTriboulet) on Twitter for the inspiration!_
+Built using the template from: https://github.com/whokilleddb/cs-bof-template

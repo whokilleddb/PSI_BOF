@@ -11,4 +11,16 @@ DFR(Kernel32, GetLastError)
 DFR(Kernel32, GetCurrentThreadId)
 #define GetCurrentThreadId Kernel32$GetCurrentThreadId
 
+DFR(Kernel32, GetCurrentProcess)
+#define GetCurrentProcess Kernel32$GetCurrentProcess
+
+DFR(Kernel32, ReadProcessMemory)
+#define ReadProcessMemory Kernel32$ReadProcessMemory
+
+DFR(Kernel32, LocalAlloc)
+#define LocalAlloc Kernel32$LocalAlloc
+
+DFR(Kernel32, LocalFree)
+#define LocalFree Kernel32$LocalFree
+
 #endif

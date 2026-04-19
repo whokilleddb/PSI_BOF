@@ -1,0 +1,53 @@
+alias psi {
+   local('$handle $data $args $subcmd $argc $count');
+
+   $argc = size(@_);
+   if ($argc < 2) {
+      berror($1, "Usage: psi lm \[dll\] | psi addr <address> <type> \[count\]");
+      return;
+   }
+
+   $subcmd = $2;
+
+   if ($subcmd eq "lm") {
+      if ($argc == 2) {
+         $args = bof_pack($1, "zz", $subcmd, "");
+         btask($1, "Running PSI BOF: list loaded modules");
+      }
+      else if ($argc == 3) {
+         $args = bof_pack($1, "zz", $subcmd, $3);
+         btask($1, "Running PSI BOF: base address of $3");
+      }
+      else {
+         berror($1, "Usage: psi lm \[dll\]");
+         return;
+      }
+   }
+   else if ($subcmd eq "addr") {
+      if ($argc < 4 || $argc > 5) {
+         berror($1, "Usage: psi addr <address> <type> \[count\]");
+         return;
+      }
+      $count = iff($argc == 5, int($5), 1);
+      $args  = bof_pack($1, "zzzi", $subcmd, $3, $4, $count);
+      btask($1, "Running PSI BOF: read $4 at $3, count=$count");
+   }
+   else {
+      berror($1, "Unknown psi subcommand: $subcmd . Use lm or addr.");
+      return;
+   }
+
+   # read in the BOF
+   $handle = openf(script_resource("psi.obj"));
+   $data   = readb($handle, -1);
+   closef($handle);
+
+   # execute it
+   beacon_inline_execute($1, $data, "go", $args);
+}
+
+beacon_command_register(
+    "psi",
+    "Inspect process memory, module base addresses, and symbols",
+    "Usage:\n  psi lm                               List all loaded modules in the current process\n  psi lm <dll>                         Base address of a loaded DLL\n  psi addr <address> <type> \[count\]    Read memory at <address>; type in { BYTE, WORD, DWORD, LPVOID }"
+);

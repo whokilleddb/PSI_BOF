@@ -9,6 +9,8 @@
 #include <lm.h>
 #include <sddl.h>
 
+#include <winternl.h>
+
 #include "beacon.h"
 #include "obfuscate.h"
 #include "dbgprint.h"

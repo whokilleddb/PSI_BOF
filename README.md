@@ -39,7 +39,7 @@ psi addr <address> <type> [count]
 ```
 
 - `address`: The address to inspect in hex
-- `type`: This controls how to treat the type of data at the given address. Valid values are: WORD, DWORD, int, LPVOID, ULONG, ULONG64, HANDLE. Therefore, if a user provides a value `DWORD`, then a chunck of `size(DWORD)` is read at that address
+- `type`: This controls how to treat the type of data at the given address. Valid values are: BYTE, WORD, DWORD, LPVOID. Therefore, if a user provides a value `DWORD`, then a chunck of `size(DWORD)` is read at that address. Each chunk is printed as a `0x`-prefixed little-endian value whose width equals the type size (e.g. a `WORD` row groups as `0xaabb 0xccdd ...`). Type names are matched case-insensitively. Same-sized Win32 aliases (`int`, `ULONG`, `ULONG64`, `HANDLE`, etc.) are intentionally omitted — use `BYTE`/`WORD`/`DWORD`/`LPVOID` for 1/2/4/8-byte reads.
 - `count`: How many chuncks to read. This argument is optional and by default set to one 
 
 The output should be a hexdump starting at the given address and chuncks grouped together
@@ -49,7 +49,7 @@ Example:
 ```
 psi addr 0xdeadbeef DWORD 2 
 psi addr 0xdeadbeef LPVOID
-psi addr 0xdeadbeef HANDLE 5
+psi addr 0xdeadbeef WORD 8
 ```
 
 ## Building BOFs

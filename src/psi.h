@@ -20,9 +20,11 @@ typedef struct _PSI_LDR_DATA_TABLE_ENTRY {
 } PSI_LDR_DATA_TABLE_ENTRY, *PPSI_LDR_DATA_TABLE_ENTRY;
 
 // psi_util.cc
-int  psi_streq(const char *a, const char *b);
-int  psi_basename_matches(const UNICODE_STRING *u, const char *name);
-void psi_us_to_ansi(const UNICODE_STRING *u, char *out, size_t cap);
+int    psi_streq(const char *a, const char *b);
+int    psi_basename_matches(const UNICODE_STRING *u, const char *name);
+void   psi_us_to_ansi(const UNICODE_STRING *u, char *out, size_t cap);
+int    psi_parse_hex_u64(const char *s, unsigned long long *out);
+size_t psi_type_size(const char *type);
 
 // subcommand handlers
 void handle_addr(datap *parser);

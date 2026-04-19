@@ -47,3 +47,43 @@ void psi_us_to_ansi(const UNICODE_STRING *u, char *out, size_t cap) {
     }
     out[n] = 0;
 }
+
+static int psi_aieq(const char *a, const char *b) {
+    while (*a && *b) {
+        if (psi_aupper(*a) != psi_aupper(*b)) return 0;
+        a++; b++;
+    }
+    return *a == 0 && *b == 0;
+}
+
+int psi_parse_hex_u64(const char *s, unsigned long long *out) {
+    if (!s || !*s || !out) return 0;
+
+    if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) s += 2;
+    if (!*s) return 0;
+
+    unsigned long long v = 0;
+    while (*s) {
+        unsigned long long d;
+        char c = *s;
+        if      (c >= '0' && c <= '9') d = (unsigned long long)(c - '0');
+        else if (c >= 'a' && c <= 'f') d = (unsigned long long)(c - 'a' + 10);
+        else if (c >= 'A' && c <= 'F') d = (unsigned long long)(c - 'A' + 10);
+        else return 0;
+
+        if (v > (~0ULL >> 4)) return 0;
+        v = (v << 4) | d;
+        s++;
+    }
+    *out = v;
+    return 1;
+}
+
+size_t psi_type_size(const char *t) {
+    if (!t) return 0;
+    if (psi_aieq(t, "BYTE"))    return 1;
+    if (psi_aieq(t, "WORD"))    return 2;
+    if (psi_aieq(t, "DWORD"))   return 4;
+    if (psi_aieq(t, "LPVOID"))  return 8;
+    return 0;
+}

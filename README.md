@@ -52,6 +52,22 @@ psi addr 0xdeadbeef LPVOID
 psi addr 0xdeadbeef WORD 8
 ```
 
+## lt
+
+The `lt` command prints every thread in the current process along with its TID, base/delta priority, TEB base address, and exit status. The Win32 start address (the value passed to `CreateThread`) is intentionally omitted: `NtQueryInformationThread(ThreadQuerySetWin32StartAddress)` returns `STATUS_ACCESS_DENIED` (`0xC0000022`) on modern Windows even for threads in the calling process, so the command reports what can be read reliably. `ExitStatus=0x103` (`STATUS_PENDING`) marks a live thread; any other value is an exited thread that hasn't been reaped. The TEB address pairs with `psi addr <teb> LPVOID` for quick triage.
+
+**Syntax**
+
+```
+psi lt
+```
+
+Example:
+
+```
+psi lt
+```
+
 ## Building BOFs
 
 To compile a BOF, update the `src/hello.cc` file or the `Makefile` to reflect the necessary changes and then type:

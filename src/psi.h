@@ -29,5 +29,6 @@ size_t psi_type_size(const char *type);
 // subcommand handlers
 void handle_addr(datap *parser);
 void handle_lm(datap *parser);
+void handle_lt(datap *parser);
 
 #endif

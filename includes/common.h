@@ -10,12 +10,14 @@
 #include <sddl.h>
 
 #include <winternl.h>
+#include <tlhelp32.h>
 
 #include "beacon.h"
 #include "obfuscate.h"
 #include "dbgprint.h"
 #include "usermacros.h"
 #include "kernel32.imp.h"
+#include "ntdll.imp.h"
 
 #ifndef __COMMON_BOF__
 #define __COMMON_BOF__

@@ -4,6 +4,20 @@
 
 A CS BOF which can be used to inspect process memory, addresses and symbols! 
 
+## Overview of commands 
+
+| Command | Description |
+|-------|----------|
+| lm | list all loaded modules along with base address, entry point, and more|
+| addr | Print the bytes at a given memory address |
+| meminfo | Print information for a given memory address |
+| lt | Print a list of all active threads in the current process along with some basic information |
+| regdump | Print the contents of a thread's registers | 
+
+-----
+
+_Send patches! Send recommendations for more commands!_
+
 ## BOF commands
 
 ## lm 

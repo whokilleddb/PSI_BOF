@@ -8,6 +8,7 @@
 #include "psi_addr.cc"
 #include "psi_lm.cc"
 #include "psi_lt.cc"
+#include "psi_regdump.cc"
 
 static void handle_cmdline(const char *subcmd, datap *parser) {
     if (!subcmd) {
@@ -15,9 +16,10 @@ static void handle_cmdline(const char *subcmd, datap *parser) {
         return;
     }
 
-    if      (psi_streq(subcmd, "addr")) handle_addr(parser);
-    else if (psi_streq(subcmd, "lm"))   handle_lm(parser);
-    else if (psi_streq(subcmd, "lt"))   handle_lt(parser);
+    if      (psi_streq(subcmd, "addr"))    handle_addr(parser);
+    else if (psi_streq(subcmd, "lm"))      handle_lm(parser);
+    else if (psi_streq(subcmd, "lt"))      handle_lt(parser);
+    else if (psi_streq(subcmd, "regdump")) handle_regdump(parser);
     else    EPRINT("[-] psi: unknown subcommand '%s'\n", subcmd);
 }
 

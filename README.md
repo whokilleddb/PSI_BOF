@@ -68,6 +68,28 @@ Example:
 psi lt
 ```
 
+## regdump
+
+The `regdump` command dumps the CPU register state of a thread in the current process. A thread id (`tid`) is required: `0` selects the calling Beacon thread (captured via `RtlCaptureContext` / `RtlCaptureContext2`); any non-zero value selects another thread, which is suspended only for the duration of the snapshot and resumed before anything is printed. If an optional register name is supplied, only that register is emitted; otherwise the full state is dumped, including the x64 GPR set plus `rflags` (with a flag-letter breakdown), segment registers, debug registers, `mxcsr`, x87 `fctrl`/`fstat`/`ftag`/`fop`/`st0..st7`, SSE (`xmm0..xmm15`), AVX/AVX2 (`ymm0..ymm15`), and AVX-512 (`zmm0..zmm31` + `k0..k7`) — the last three gated on the host's `GetEnabledXStateFeatures` report. Register names are matched case-insensitively and accept sub-width aliases (`rax`/`eax`/`ax`/`ah`/`al` all resolve against the same underlying GPR; likewise `r8`/`r8d`/`r8w`/`r8b`, etc.).
+
+**Syntax**:
+
+```
+psi regdump <tid> [register]
+```
+
+- `tid`: Thread id whose context to dump. `0` means the current (calling) thread; on older Windows builds without `RtlCaptureContext2`, the self-inspection YMM/ZMM sections are reported as unavailable rather than fabricated.
+- `register`: optional register name to filter the output to a single register.
+
+Example:
+
+```
+psi regdump 0
+psi regdump 0 rax
+psi regdump 12345 rip
+psi regdump 12345 ymm0
+```
+
 ## Building BOFs
 
 To compile a BOF, update the `src/hello.cc` file or the `Makefile` to reflect the necessary changes and then type:
